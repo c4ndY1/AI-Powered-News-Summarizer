@@ -1,0 +1,775 @@
+/* Imports */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=National+Park:wght@200..800&family=Rubik:ital,wght@0,300..900;1,300..900&family=Teko:wght@300..700&display=swap");
+
+/* Root variables */
+:root {
+  --background: #ffffff;
+  --primary-color: #333333;
+  --secondary-color: #555555;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --button-bg-selected: #feba17;
+  --button-bg-unselected: #b3b3b3;
+  --button-text: #000000;
+  --arrow-bg: transparent;
+  --arrow-hover-bg: #feba17;
+  --arrow-color: #000000;
+  --audio-progress-bg: #e0e0e0;
+  --audio-progress-fill: #feba17;
+  --action-button-bg: #ffffff;
+  --action-button-hover: #f5f5f5;
+  --time-color: #666666;
+  --datetime-bg: rgba(254, 186, 23, 0.1);
+}
+
+/* Animation Keyframes */
+@keyframes articlePopup {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--primary-color);
+}
+
+/* Header Section */
+.bitz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px var(--shadow-light);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.bitz-datetime {
+  font-family: "Rubik", monospace;
+  font-size: 0.85rem;
+  color: var(--time-color);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  background: var(--datetime-bg);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.loading-spinner {
+  font-size: 1.5rem;
+  color: #333;
+  /* Add any additional styling for your loading indicator */
+}
+
+.bitz-welcome{
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Update the .bitz-user-info class */
+.bitz-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: max-content;
+}
+
+/* Remove the negative margin from sign-out-button */
+.bitz-user-info .sign-out-button {
+  background: #feba17;
+  border: none;
+  color: black;
+  height: 45px;
+  width: 100px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-right: 15px; /* Keep a small margin between buttons */
+}
+
+/* The rest of the styles remain the same */
+.bitz-user-info .sign-out-button:hover {
+  background-color: #987626;
+  transform: translateY(-1px);
+}
+
+.bitz-user-info .settings-button {
+  background: #feba17;
+  border: none;
+  color: black;
+  height: 45px;
+  width: 100px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.bitz-user-info .settings-button:hover {
+  background-color: #987626;
+  transform: translateY(-1px);
+}
+
+.bitz-logo {
+  margin-left: -5px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--button-bg-selected);
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bitz-logo-img {
+
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
+}
+
+.bitz-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  gap: 2px;
+}
+
+.bitz-title .byte {
+  margin-left: -9px;
+  color: var(--primary-color);
+}
+
+.bitz-title .newz {
+  margin-left: -6px;
+  color: #feba17;
+}
+
+/* Container */
+.bitz-container {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--background);
+  padding: 2rem 3rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+}
+
+/* Categories and Buttons */
+.bitz-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 10px;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.bitz-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--button-bg-unselected);
+  color: var(--button-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.bitz-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+.bitz-button.active {
+  background: var(--button-bg-selected);
+  color: var(--button-text);
+}
+
+/* Sub Categories Styles */
+.bitz-sub-categories-container {
+  width: 100%;
+  max-width: 1400px;
+  position: relative;
+  margin: 1rem auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.bitz-sub-buttons {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  justify-content: center;
+}
+
+.bitz-sub-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.bitz-sub-buttons.has-nav-buttons {
+  padding: 0.5rem 2rem;
+}
+
+.bitz-sub-buttons.no-nav-buttons {
+  padding: 0.5rem;
+}
+
+.bitz-sub-button {
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--button-bg-unselected);
+  color: var(--button-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+.bitz-sub-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-light);
+  background: var(--button-bg-unselected);
+  opacity: 0.9;
+}
+
+.bitz-sub-button.active {
+  background: var(--button-bg-selected);
+  color: var(--button-text);
+  box-shadow: 0 4px 8px rgba(254, 186, 23, 0.2);
+}
+
+.sub-nav-button {
+  background: var(--arrow-bg);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--arrow-color);
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.sub-nav-button:hover {
+  background: var(--arrow-hover-bg);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.sub-nav-button.left {
+  left: 0;
+}
+
+.sub-nav-button.right {
+  right: 0;
+}
+
+/* Grid and Cards */
+.bitz-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: 0.3s ease-out;
+}
+
+.bitz-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px var(--shadow-light);
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  opacity: 0;
+  animation: articlePopup 0.6s ease-out forwards;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+  cursor: pointer;
+}
+
+.bitz-card-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bitz-card-image-container {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.bitz-card-image {
+  width: 100%;
+  height: 112.5px;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+.bitz-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.bitz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--shadow-light);
+}
+
+.bitz-card:hover .bitz-card-image img {
+  transform: scale(1.05);
+}
+
+.bitz-card h2 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.bitz-card p {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+/* Category Label */
+.bitz-category {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--button-bg-selected);
+  border-radius: 8px;
+  color: var(--button-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Card Actions */
+.bitz-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.bitz-actions-left,
+.bitz-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Toggle Summary and Read More Buttons */
+.bitz-toggle-summary,
+.bitz-read-more {
+  background: none;
+  border: none;
+  color: var(--button-bg-selected);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.bitz-toggle-summary:hover,
+.bitz-read-more:hover {
+  background: rgba(254, 186, 23, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Reactions */
+.bitz-reactions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--card-border);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.reaction-button {
+  background: var(--action-button-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.reaction-button:hover {
+  transform: scale(1.1);
+  background: var(--action-button-hover);
+}
+
+.reaction-button.active {
+  background: var(--button-bg-selected);
+  border-color: var(--button-bg-selected);
+}
+
+/* Audio Controls */
+.bitz-audio-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--action-button-bg);
+  padding: 0.3rem;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+}
+
+.bitz-audio-button {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.bitz-audio-button:hover {
+  background: var(--action-button-hover);
+}
+
+.bitz-audio-progress {
+  width: 100px;
+  height: 4px;
+  background: var(--audio-progress-bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bitz-audio-progress-bar {
+  height: 100%;
+  background: var(--audio-progress-fill);
+  transition: width 0.1s linear;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .bitz-header {
+    padding: 1rem;
+  }
+
+  .bitz-title {
+    font-size: 1.8rem;
+  }
+
+  .bitz-user {
+    font-size: 0.9rem;
+  }
+
+  .bitz-datetime {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .bitz -container {
+    padding: 1rem;
+  }
+
+  .bitz-card {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .bitz-card-image-container {
+    width: 100%;
+    gap: 2.5rem;
+  }
+
+  .bitz-card-image {
+    width: 100%;
+    height: 56.25vw;
+    max-height: 400px;
+  }
+
+  .bitz-card-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bitz-actions-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .bitz-audio-control {
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+
+  .bitz-audio-progress {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .bitz-reactions {
+    padding-top: 2rem;
+    margin-top: 1rem;
+  }
+
+  .reaction-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .bitz-grid {
+    gap: 1.5rem;
+    padding: 0.5rem;
+  }
+
+  .bitz-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .bitz-sub-categories-container {
+    margin: 0.5rem auto 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .bitz-sub-buttons {
+    justify-content: flex-start;
+    max-width: 100%;
+  }
+
+  .bitz-sub-button {
+    padding: 0.35rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .sub-nav-button {
+    width: 28px;
+    height: 28px;
+    font-size: 1.2rem;
+    background: var(--card-bg);
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .bitz-sub-categories-container {
+    margin: 0.75rem auto 1.75rem;
+  }
+
+  .bitz-sub-buttons {
+    gap: 0.6rem;
+  }
+
+  .bitz-sub-button {
+    padding: 0.45rem 1.1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Styles for ThumbsButtons component */
+.thumbs-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  
+  .reaction-button {
+    background: #feba17;
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+  }
+  
+  .reaction-button:hover {
+    transform: scale(1.1);
+    background: var(--action-button-hover); /* Light gray for hover */
+  }
+  
+  .reaction-button.active {
+    background: #ffffff;
+    border-color: var(--button-bg-selected); /* Optional: Yellow border for active state */
+  }
+  
+  .reaction-button.active svg {
+    transform: scale(0.7); 
+  }
+  
+  .reaction-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .reaction-button svg {
+    width: 32px; /* Adjust the size here */
+    height: 32px; /* Adjust the size here */
+  }
+  
+  .reaction-button.active svg {
+    transform: scale(1.0); /* Slightly enlarge on active state */
+  }
+  
+  .reaction-button:hover svg {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+  }
+
+  /* Animations */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .thumbs-up.active {
+    border: 2px solid #000000; /* Green border for thumbs up */
+  }
+  
+  .thumbs-down.active {
+    border: 2px solid #000000; /* Red border for thumbs down */
+  }

@@ -1,0 +1,196 @@
+/* General reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+    background: white;
+    color: #fff;
+  }
+  
+  /* Container for the About Us page */
+  .about-section{
+    background-color: #ffffff84;
+  }
+
+  .about-us-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url('../Images/bgImage0.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .about-us-container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+  }
+  
+  .about-us-container > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  
+  /* Header Section */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* space between logo and text */
+  }
+  
+  .logo-image {
+    height: 60px;
+    width: 60px;
+    object-fit: contain;
+  }
+  
+  .logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+  }
+  
+  .byte{
+    color: #333;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-left: -20px;
+    margin-right: 5px;
+  }
+
+  .news{
+    color: #feba17;
+    margin-top: 8px;
+    margin-left: -5px;
+    font-size: 32px;
+  }
+  
+  .nav .btn {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+    background: #feba17;
+    box-shadow: 0 4px 10px rgba(99, 164, 255, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .nav .btn:hover {
+    background-color: #000000;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* About Section */
+  .about-section {
+    padding: 5rem 2rem;
+    text-align: center;
+    
+  }
+  
+  .about-section h1 {
+    margin-top: -60px;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #000000;
+  }
+  
+  .about-description {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #000000;
+  }
+  
+  /* Team Grid */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns in a row */
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .team-card:hover {
+    background: #feba17; /* Yellow background */
+    color: #000000;       /* Text turns black */
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Ensure all text inside turns black when hovered */
+  .team-card:hover h3,
+  .team-card:hover p,
+  .team-card:hover p strong {
+    color: #000000;
+  }
+  
+  
+  @media (max-width: 900px) {
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .team-grid {
+      grid-template-columns: 1fr; /* 1 column for mobile */
+    }
+  }
+  
+  .team-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .team-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  .team-card h3 {
+    font-size: 1.5rem;
+    color: #000000;
+    margin-bottom: 0.5rem;
+  }
+  
+  .team-card p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #000000;
+  }
+  
+  .team-card p strong {
+    color: #feba17;
+  }

@@ -1,0 +1,51 @@
+/* Container for the code generator */
+.code-generator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 12px; /* Space between the verification code and button */
+  }
+  
+  /* Styling for the verification code */
+  .verification-code {
+    font-family: monospace;
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: #434956;
+  }
+  
+  /* Styling for the refresh (regenerate) button */
+  .regenerate-button {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border: 0px solid #396ef4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #396ef4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .regenerate-button::before {
+    content: '↻';
+    font-size: 1.6rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .regenerate-button:hover {
+    background-color: #e6e9ff;
+    border-color: #5d6bff;
+  }
+  
+  .regenerate-button:hover::before {
+    transform: rotate(180deg);
+  }
+  
+  .regenerate-button:active {
+    transform: scale(0.95);
+  }
