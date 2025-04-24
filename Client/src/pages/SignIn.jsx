@@ -32,6 +32,7 @@ const SignIn = () => {
       if (response.data.message === "Success") {
         localStorage.setItem("authToken", response.data.token); // Save the token
         localStorage.setItem('username', response.data.user.username);
+        localStorage.setItem('userId', response.data.user._id);
         window.location.href = '/main';
       } else {
         alert(response.data.message);

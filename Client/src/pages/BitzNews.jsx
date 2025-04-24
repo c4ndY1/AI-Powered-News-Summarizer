@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/BitzNews.css";
-import newsData from "../Data/news.json";
-import personalizedNewsData from "../Data/personalized_news.json";
 import logo from "../Images/Logo.png";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import linkimage from "../Images/Link2.png";
+// Initialize speech synthesis
+const synth = window.speechSynthesis;
 
 const categories = [
   "For You",
@@ -42,12 +42,29 @@ export default function BitzNews() {
   const [audioProgress, setAudioProgress] = useState({});
   const [summaryToggles, setSummaryToggles] = useState({});
   const [likes, setLikes] = useState({});
-  const [currentDateTime, setCurrentDateTime] = useState("2025-04-20 13:29:17"); // Set to your provided time
+  const [currentDateTime, setCurrentDateTime] = useState("2025-04-21 17:30:37");
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState("TejKiran06"); // Set to your provided username
+  const [currentUser, setCurrentUser] = useState("TejKiran06");
+  const [personalizedNews, setPersonalizedNews] = useState([]);
+  const [newsData, setNewsData] = useState([]);
+  const [error, setError] = useState(null);
+  const [activeUtterance, setActiveUtterance] = useState(null);
   const subCategoryRef = useRef(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const profileRef = useRef(null);
   const navigate = useNavigate();
+
+  // Fetch news.json from backend
+  const fetchNewsData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/news");
+      setNewsData(response.data); // Save the fetched news data in state
+    } catch (error) {
+      console.error("Error fetching news data:", error);
+      setError("Failed to load news data");
+    }
+  };
 
   // Authentication check
   useEffect(() => {
@@ -85,6 +102,51 @@ export default function BitzNews() {
 
     verifyUser();
   }, [navigate]);
+
+  // Fetch personalized news
+  useEffect(() => {
+    const fetchPersonalizedNews = async () => {
+      const token = localStorage.getItem("authToken");
+
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/personalized-news",
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Extract the `news` array from the response and set it to the state
+        if (response.data && Array.isArray(response.data.news)) {
+          setPersonalizedNews(response.data.news);
+        } else {
+          console.error("Invalid response format:", response.data);
+          setPersonalizedNews([]);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          console.error("Authentication failed - invalid or missing token");
+          setError("Please log in again");
+        } else {
+          console.error("Error fetching personalized news:", error);
+          setError("Failed to load personalized news");
+        }
+        setPersonalizedNews([]);
+      }
+    };
+
+    if (filter === "For You") {
+      fetchPersonalizedNews();
+    }
+  }, [filter]);
+
+  // Fetch initial news data on component mount
+  useEffect(() => {
+    fetchNewsData();
+  }, []);
 
   // Update datetime every second
   useEffect(() => {
@@ -125,6 +187,13 @@ export default function BitzNews() {
     }
   }, [filter]);
 
+   // Cleanup effect for speech synthesis
+    useEffect(() => {
+      return () => {
+        synth.cancel();
+      };
+    }, []);
+
   const handleCategoryClick = (cat) => {
     setFilter(cat);
     setSubFilter("");
@@ -155,47 +224,125 @@ export default function BitzNews() {
     }));
   };
 
-  const handleReaction = (articleId, type) => (e) => {
+  const handleReaction = (articleId, type, article) => async (e) => {
     e.stopPropagation();
+
+    // Update local state for likes/dislikes
     setLikes((prev) => ({
       ...prev,
       [articleId]: type === prev[articleId] ? null : type,
     }));
+
+    try {
+      // Determine the API endpoint based on the reaction type
+      const apiEndpoint = type === "like" ? "/api/update-like" : "/api/update-dislike";
+
+      // API call for "like" or "dislike" action
+      const token = localStorage.getItem("authToken");
+      const response = await axios.post(
+        `http://localhost:5000${apiEndpoint}`,
+        {
+          category: article.category, // Pass the category of the article
+        },
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(`${type.charAt(0).toUpperCase() + type.slice(1)} action processed successfully:`, response.data);
+    } catch (error) {
+      console.error(`Error processing the ${type} action:`, error);
+      setError(`Failed to process the ${type} action`);
+    }
   };
 
-  const toggleAudio = (articleId) => {
-    setAudioStates((prev) => ({
-      ...prev,
-      [articleId]: !prev[articleId],
-    }));
+  const toggleAudio = (articleId, category, text) => {
+    setAudioStates((prev) => {
+      const isCurrentlyPlaying = prev[articleId];
 
-    if (!audioStates[articleId]) {
-      const interval = setInterval(() => {
-        setAudioProgress((prev) => {
-          if (prev[articleId] >= 100) {
-            clearInterval(interval);
-            setAudioStates((prevStates) => ({
-              ...prevStates,
-              [articleId]: false,
+      // Stop any currently playing speech
+      synth.cancel();
+      if (activeUtterance) {
+        setActiveUtterance(null);
+      }
+
+      // If we're turning audio on
+      if (!isCurrentlyPlaying) {
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Get available voices and set English voice if available
+        const voices = synth.getVoices();
+        const englishVoice = voices.find((voice) =>
+          voice.lang.startsWith("en-")
+        );
+        if (englishVoice) {
+          utterance.voice = englishVoice;
+        }
+
+        // Configure utterance
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        let startTime;
+        utterance.onstart = () => {
+          startTime = Date.now();
+          updateWeightOnServer(category, "play");
+        };
+
+        utterance.onboundary = (event) => {
+          if (event.charIndex) {
+            const progress = (event.charIndex / text.length) * 100;
+            setAudioProgress((prevProgress) => ({
+              ...prevProgress,
+              [articleId]: Math.min(progress, 100),
             }));
-            return prev;
           }
-          return {
-            ...prev,
-            [articleId]: (prev[articleId] || 0) + 1,
-          };
-        });
-      }, 100);
-    }
+        };
+
+        utterance.onend = () => {
+          setAudioStates((prevStates) => ({
+            ...prevStates,
+            [articleId]: false,
+          }));
+          setAudioProgress((prevProgress) => ({
+            ...prevProgress,
+            [articleId]: 100,
+          }));
+          setActiveUtterance(null);
+        };
+
+        synth.speak(utterance);
+        setActiveUtterance(utterance);
+
+        return {
+          ...prev,
+          [articleId]: true,
+        };
+      }
+
+      return {
+        ...prev,
+        [articleId]: false,
+      };
+    });
   };
 
   const filteredArticles = useMemo(() => {
     try {
+      const validPersonalizedNews = Array.isArray(personalizedNews)
+        ? personalizedNews
+        : [];
+      const validNewsData = Array.isArray(newsData) ? newsData : [];
+
       return filter === "For You"
-        ? personalizedNewsData
+        ? validPersonalizedNews
         : filter === "All"
-        ? newsData
-        : newsData.filter((a) => {
+        ? validNewsData
+        : validNewsData.filter((a) => {
             if (subFilter) {
               return a.category === subFilter;
             }
@@ -205,7 +352,7 @@ export default function BitzNews() {
       console.error("Error filtering articles:", error);
       return [];
     }
-  }, [filter, subFilter]);
+  }, [filter, subFilter, personalizedNews, newsData]);
 
   if (isLoading) {
     return (
@@ -217,6 +364,14 @@ export default function BitzNews() {
 
   if (!isAuthenticated) {
     return <div>Please sign in to continue...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
@@ -232,16 +387,11 @@ export default function BitzNews() {
           </div>
         </div>
 
-        <h1 className="bitz-welcome">Welcome, {currentUser}</h1>
-
-        <div className="bitz-user-info">
-          <button className="sign-out-button" onClick={handleSignOut}>
-            Sign Out
-          </button>
-          <button className="settings-button" onClick={() => navigate("/settings")}>
-            Settings
-          </button>
-        </div>
+        <h1 className="bitz-welcome">
+          <span className="welcome">Welcome,</span>
+          <span className="username">{currentUser}</span>
+        </h1>
+        <button onClick={handleSignOut} className="Button">Sign Out</button>
       </header>
 
       <div className="bitz-buttons">
@@ -298,97 +448,107 @@ export default function BitzNews() {
       )}
 
       <div className="bitz-grid">
-        {filteredArticles.map((a, i) => (
-          <div key={i} className="bitz-card" role="article" tabIndex={0}>
-            <div className="bitz-card-content">
-              <div className="bitz-content-text">
-                <h2>{a.title}</h2>
-                <p>{summaryToggles[a.id || i] ? a.summary2 : a.summary1}</p>
-                <div className="bitz-card-actions">
-                  <div className="bitz-actions-left">
-                    <span className="bitz-category">{a.category}</span>
-                    <button
-                      className="bitz-toggle-summary"
-                      onClick={toggleSummary(a.id || i)}
-                    >
-                      {summaryToggles[a.id || i] ? "Show Less" : "Show More"}
-                    </button>
-                  </div>
-                  <div className="bitz-actions-right">
-                    <div className="bitz-audio-control">
+        {(Array.isArray(filteredArticles) ? filteredArticles : []).map(
+          (a, i) => (
+            <div key={i} className="bitz-card" role="article" tabIndex={0}>
+              <div className="bitz-card-content">
+                <div className="bitz-content-text">
+                  <h2>{a.title}</h2>
+                  <p>{summaryToggles[a.id || i] ? a.summary2 : a.summary1}</p>
+                  <div className="bitz-card-actions">
+                    <div className="bitz-actions-left">
+                      <span className="bitz-category">{a.category}</span>
                       <button
-                        className="bitz-audio-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAudio(a.id || i);
-                        }}
+                        className="bitz-toggle-summary"
+                        onClick={toggleSummary(a.id || i)}
                       >
-                        {audioStates[a.id || i] ? "⏸" : "▶"}
+                        {summaryToggles[a.id || i] ? "Show Less" : "Show More"}
                       </button>
-                      <div className="bitz-audio-progress">
-                        <div
-                          className="bitz-audio-progress-bar"
-                          style={{ width: `${audioProgress[a.id || i] || 0}%` }}
-                        />
-                      </div>
                     </div>
-                    <button
-                      className="bitz-read-more"
-                      onClick={() => handleCardClick(a.link)}
-                    >
-                      <img
-                        src={linkimage}
-                        alt="Read More"
-                        className="bitz-read-more-icon"
-                        width="20"
-                        height="20"
-                      />
-                      Full Article
-                    </button>
+                    <div className="bitz-actions-right">
+                      <div className="bitz-audio-control">
+                        <button
+                          className="bitz-audio-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleAudio(
+                              a.id || i,
+                              a.category,
+                              summaryToggles[a.id || i]
+                                ? a.summary2
+                                : a.summary1
+                            );
+                          }}
+                        >
+                          {audioStates[a.id || i] ? "⏸" : "▶"}
+                        </button>
+                        <div className="bitz-audio-progress">
+                          <div
+                            className="bitz-audio-progress-bar"
+                            style={{
+                              width: `${audioProgress[a.id || i] || 0}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <button
+                        className="bitz-read-more"
+                        onClick={() => handleCardClick(a.link)}
+                      >
+                        <img
+                          src={linkimage}
+                          alt="Read More"
+                          className="bitz-read-more-icon"
+                          width="20"
+                          height="20"
+                        />
+                        Full Article
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
+              {a.image_url && (
+                <div className="bitz-card-image-container">
+                  <div className="bitz-card-image">
+                    <img
+                      src={a.image_url}
+                      alt={a.title}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.parentElement.style.display = "none";
+                      }}
+                    />
+                  </div>
+                  <div className="bitz-reactions">
+                    <button
+                      className={`reaction-button ${
+                        likes[a.id || i] === "like" ? "active" : ""
+                      }`}
+                      onClick={handleReaction(a.id || i, "like", a)} // Pass article object
+                    >
+                      <ThumbsUp
+                        size={20}
+                        color={likes[a.id || i] === "like" ? "yellow" : "gray"}
+                      />
+                    </button>
+                    <button
+                      className={`reaction-button ${
+                        likes[a.id || i] === "dislike" ? "active" : ""
+                      }`}
+                      onClick={handleReaction(a.id || i, "dislike", a)} // Pass article object
+                    >
+                      <ThumbsDown
+                        size={20}
+                        color={likes[a.id || i] === "dislike" ? "yellow" : "gray"}
+                      />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            {a.image_url && (
-              <div className="bitz-card-image-container">
-                <div className="bitz-card-image">
-                  <img
-                    src={a.image_url}
-                    alt={a.title}
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.parentElement.style.display = "none";
-                    }}
-                  />
-                </div>
-                <div className="bitz-reactions">
-                  <button
-                    className={`reaction-button ${
-                      likes[a.id || i] === "like" ? "active" : ""
-                    }`}
-                    onClick={handleReaction(a.id || i, "like")}
-                  >
-                    <ThumbsUp
-                      size={20}
-                      color={likes[a.id || i] === "like" ? "yellow" : "gray"}
-                    />
-                  </button>
-                  <button
-                    className={`reaction-button ${
-                      likes[a.id || i] === "dislike" ? "active" : ""
-                    }`}
-                    onClick={handleReaction(a.id || i, "dislike")}
-                  >
-                    <ThumbsDown
-                      size={20}
-                      color={likes[a.id || i] === "dislike" ? "yellow" : "gray"}
-                    />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   );

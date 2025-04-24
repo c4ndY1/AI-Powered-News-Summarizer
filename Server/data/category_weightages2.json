@@ -1,0 +1,23 @@
+{
+  "action": "dislike",
+  "category": "India",
+  "vector": {
+    "India": 0.1927,
+    "World": 0,
+    "Sports": 0.2048,
+    "Business": 0.2008,
+    "Entertainment": 0,
+    "Telangana": 0,
+    "Maharastra": 0.2008,
+    "UttarPradesh": 0,
+    "Gujarat": 0,
+    "TamilNadu": 0,
+    "Uttarakhand": 0,
+    "AndhraPradesh": 0,
+    "Delhi": 0,
+    "Mumbai": 0,
+    "Chennai": 0,
+    "Hyderabad": 0.2008,
+    "Bengaluru": 0
+  }
+}

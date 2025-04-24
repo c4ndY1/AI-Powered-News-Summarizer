@@ -1,0 +1,15 @@
+2025-04-24 17:33:46 - Action: like, Category: India, Weight change: 0.2000 -> 0.2032
+2025-04-24 17:34:10 - Action: like, Category: India, Weight change: 0.2000 -> 0.2032
+2025-04-24 17:42:26 - Action: like, Category: India, Weight change: 0.4000 -> 0.4048
+2025-04-24 17:58:48 - Action: like, Category: India, Weight change: 0.4048 -> 0.4096
+2025-04-24 17:59:16 - Action: like, Category: Sports, Weight change: 0.0000 -> 0.0000
+2025-04-24 17:59:30 - Action: like, Category: Sports, Weight change: 0.0000 -> 0.0000
+2025-04-24 18:03:30 - Action: like, Category: Business, Weight change: 0.2000 -> 0.2032
+2025-04-24 18:03:44 - Action: like, Category: Business, Weight change: 0.2032 -> 0.2064
+2025-04-24 20:47:16 - Action: dislike, Category: India, Weight change: 0.2000 -> 0.1968
+2025-04-24 20:47:43 - Action: dislike, Category: India, Weight change: 0.1968 -> 0.1936
+2025-04-24 20:47:45 - Action: dislike, Category: India, Weight change: 0.1936 -> 0.1905
+2025-04-24 20:56:01 - Action: like, Category: Sports, Weight change: 0.2024 -> 0.2056
+2025-04-24 21:21:55 - Action: dislike, Category: World, Weight change: 0.0000 -> 0.0000
+2025-04-24 21:22:11 - Action: like, Category: India, Weight change: 0.1897 -> 0.1927
+2025-04-24 21:22:13 - Action: dislike, Category: India, Weight change: 0.1927 -> 0.1896
