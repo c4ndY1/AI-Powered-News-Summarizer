@@ -23,8 +23,16 @@
 </p>
 
 ---
+## Table of Contents
 
-##  Core Features
+- Features
+- System Architecture
+- Tech Stack
+- Installation
+- How to Run our Project
+- Future Enhancements
+  
+##  Features
 
 -  *AI-Powered Summarization*  
   Get crisp, digestible summaries powered by GPT or HuggingFace Transformers.
@@ -43,17 +51,71 @@
 
 ---
 
+## System Architecture
+
+- News Scraper: Fetches latest articles from trusted sources
+
+- Summarizer: AI/NLP model generates concise summaries
+
+- Categorizer & Scoring: Classifies articles and updates category scores based on user activity
+
+- Personalization Engine: Adjusts content dynamically
+
+- Text-to-Speech Module: Converts summaries to audio
+
+- Frontend: Displays summaries, categories, and interaction options
+  
 ##  Tech Stack
 
-| Layer       | Tech                                                                 |
-|-------------|----------------------------------------------------------------------|
-| *Frontend* | React, Tailwind CSS, AOS                                            |
-| *Backend*  | Express.js, Node.js, Puppeteer (Web Scraping)                                   |
-| *AI/NLP*   | OpenAI GPT / HuggingFace Transformers                               |
-| *Audio*    | Web Speech API                                                      |
+| Layer      | Tech                                                               |
+|------------|--------------------------------------------------------------------|
+| *Frontend* | React, Tailwind CSS, AOS                                           |
+| *Backend*  | Express.js, Node.js, Puppeteer (Web Scraping)                      |
+| *AI/NLP*   | Python (BERT, NLTK, Transformers)                                  |
+| *TTS API*  | Text-to-Speech integration                                                     |
+| *Database* | MongoDB                                                            |
 
 ---
 
+## Installation
+
+- Clone the repository:
+
+```bash
+  git clone <https://github.com/c4ndY1/AI-Powered-News-Summarizer>
+  cd AI News Summarizer
+```
+- Frontend
+ Create App if you dont have already
+ ```bash
+  npx create-react-app client
+  cd client
+```
+Install Required Packages
+ ```bash
+  npm install axios
+  npm install react-router-dom
+  npm install @mui/material @emotion/react @emotion/styled  
+  npm install react-icons                                  
+  npm install framer-motion                                   
+```
+ 
+- Backend
+Install Required Packages
+```bash
+  npm install express
+  npm install axios
+  npm install cors
+```
+- Required Python Packages
+Install Required Packages
+```bash
+  pip install requests
+  pip install beautifulsoup4
+  pip install transformers
+```
+
+    
 ##  Meet the Team
 
 > The brains and brawn behind ByteNews 
@@ -63,78 +125,30 @@
 | *Sameeth*  | Frontend Development                              |
 | *Ajay*     | Frontend Development                              |
 | *Tejkiran* | Backend Development                               |
-| *Raviteja* | Web Scraping, Personalization, Frontend           |
-| *Aasish*   | Web Scraping, Personalization, Frontend           |
-| *Rahul*    | UI/UX Design                                      |
+| *Raviteja* | Personalization Algorithms, Frontend              |
+| *Aasish*   | WebScrapping, WebSpeech, Personalization Algorithms|
+| *Rahul*    | UI/UX Design, Backend                                      |
 
-> Want profile pictures and socials linked? Ping us and we’ll plug them in!
-
----
-
-##  Installation Guide
-
-###  Clone the Repository
-
-bash
-git clone https://github.com/your-username/news-article-summarizer.git
-cd news-article-summarizer
-
-
-###  Install Frontend Dependencies
-
-bash
-npm install
-
-
-###  Environment Variables
-
-Create a .env file:
-
-env
-VITE_OPENAI_API_KEY=your_openai_api_key_here
-
-
-###  Run the Frontend
-
-bash
-npm run dev
-
-
-###  Scraper Setup
-
-bash
-cd scraper
-node scrape.js
 
 
 ---
 
-##  Project Structure
+## How to Run our Project
+
+To run our Project
+- Go to the client directory and run the command below
+```bash
+  npm run dev
+```
+- Go to the server directory and run the command below
+```bash
+  npm start
+```
 
 
-├── public/
-├── src/
-│   ├── components/        # UI Elements
-│   ├── pages/             # Route Views
-│   ├── utils/             # Helpers & Logic
-│   └── App.jsx
-├── scraper/
-│   └── scrape.js          # Puppeteer Script
-├── .env
-├── package.json
-└── README.md
 
 
----
 
-##  Screenshots
-
-> Add your visuals here for homepage, summary page, and voice playback UI.
-
-
- Example:
-![Homepage](./screenshots/homepage.png)
-![Summary Page](./screenshots/summary-page.png)
 
 
 ---
@@ -143,24 +157,18 @@ node scrape.js
 
 > Embed or link your demo video here once recorded.
 
----
+## Future Enhancements
 
-##  What's Next?
+- Multi-Language Support
+- More News Sources
+- Advanced Personalization
+- Faster Summarization
+- More News Categories
+- Google Sign-In
 
--  Support for TOI, Indian Express & more
--  User login with saved history
--  Multilingual news summarization
--  Sentiment analysis & bias detection
 
----
-
-##  Contributing
-
-Open a PR, suggest features, or fix bugs. We love collaborators!
-
----
 
 
 <p align="center">
-  Made with Dedication and Hardwork by Team ByteNews
+  Made with Dedication and Hardwork by Team ByteNewz
 </p>
