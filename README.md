@@ -153,9 +153,6 @@ To run our Project
 
 ---
 
-##  Demo Video
-
-> Embed or link your demo video here once recorded.
 
 ## Future Enhancements
 
