@@ -3,11 +3,6 @@
 > *An intelligent, voice-ready news summarizer that scrapes live headlines from Hindustan Times, compresses them with cutting-edge NLP, and speaks them aloud — for the modern mind on the move.*  
 
 ---
-
-<p align="center">
-  <img src="https://img.icons8.com/color/96/news.png" alt="ByteNews Logo" width="100"/>
-</p>
-
 <h1 align="center">ByteNews</h1>
 <p align="center">
   <em>“Don’t scroll. Just know.”</em><br>
@@ -17,8 +12,6 @@
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/React-18.2.0-blue.svg" /></a>
   <a href="#"><img src="https://img.shields.io/badge/Node.js-20.0.0-brightgreen.svg" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/OpenAI-GPT-FF7F50.svg" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgrey.svg" /></a>
 </p>
 
